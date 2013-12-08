@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if [ -z "$JAVACMD" ] ; then
+  if [ -z "$JAVA_HOME" ] ; then
+    JAVACMD='java'
+  else
+    JAVACMD="$JAVA_HOME/bin/java"
+  fi
+fi
+
+java_class=falcon.fix.perf.ClientPerfTest
+
+JAVA_OPTS="-verbose:gc -cp target/falcon-0.1.0-master-SNAPSHOT-jar-with-dependencies.jar"
+
+$JAVACMD $JAVA_OPTS $java_class $@
