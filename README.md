@@ -1,14 +1,14 @@
 # Falcon
 
-Falcon is a high performance, low latency FIX engine for the JVM.  It provides
+Falcon is a high performance, low latency FIX engine for the JVM. It provides
 an API that enables FIX connectivity for both buy side and sell side
 applications such as trading systems and order management systems.
 
-The engine is designed to avoid heap allocations in the TX and RX paths to
-avoid GC pauses that are disasterious for low-latency applications.  The engine
+The engine is designed to avoid heap allocations on the TX and RX paths to
+avoid GC pauses that are disastrous for low-latency applications. The engine
 is packed with other optimizations such as avoiding querying the system clock
 for every message and open-coding formatting and parsing functions where the
-JRE allocates memory implicity.
+JRE allocates memory implicitly.
 
 Falcon is able to achieve 23 μs RTT on average when running a latency tester
 client and server on the same x86-64 machine with two cores. This means in
