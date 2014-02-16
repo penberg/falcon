@@ -103,7 +103,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>falcon.Main</mainClass>
+              <mainClass>falcon.fix.perf.ClientPerfTest</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -124,7 +124,7 @@
               </descriptorRefs>
               <archive>
                 <manifest>
-                  <mainClass>falcon.Main</mainClass>
+                  <mainClass>falcon.fix.perf.ClientPerfTest</mainClass>
                 </manifest>
               </archive>
             </configuration>
