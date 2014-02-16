@@ -10,9 +10,9 @@ is packed with other optimizations such as avoiding querying the system clock
 for every message and open-coding formatting and parsing functions where the
 JRE allocates memory implicitly.
 
-Falcon is able to achieve 23 μs RTT on average when running a latency tester
+Falcon is able to achieve 23 µs RTT on average when running a latency tester
 client and server on the same x86-64 machine with two cores. This means in
-practice that the FIX engine overhead is around 10 μs per message sent or
+practice that the FIX engine overhead is around 10 µs per message sent or
 received on top of network latency, with allocation rates as small as 1
 KB/second per session.
 
@@ -85,10 +85,10 @@ public class Example {
 
 ## Performance
 
-FIX engine is measured to have 23 μs round-trip time for a FIX client sending a
+FIX engine is measured to have 23 µs round-trip time for a FIX client sending a
 ``NewOrderSingle`` message and waiting for ``ExecutionReport`` on x86-64 Linux
 with both client and server running on the same machine.  The numbers include
-Linux TCP/IP loopback overhead which is 5 μs of the RTT.
+Linux TCP/IP loopback overhead which is 5 µs of the RTT.
 
 The numbers can be reproduced by starting a FIX latency test server available
 in ``libtrading``:
@@ -103,7 +103,7 @@ and running Falcon latency tests against it:
 $ time ./bin/falcon-perf-test 1000000
 22.812477 seconds
 43835.7 messages/second
-ḿin/avg/max = 20.4/22.8/997.5 μs
+ḿin/avg/max = 20.4/22.8/997.5 µs
 ```
 
 ## License
