@@ -77,7 +77,7 @@ public class ClientPerfTest {
     double seconds = (double)duration / 1000000000.0;
     System.out.printf("%f seconds\n", seconds);
     System.out.printf("%.1f messages/second\n", (double)iterations/seconds);
-    System.out.printf("ḿin/avg/max = %.1f/%.1f/%.1f μs\n",
+    System.out.printf("ḿin/avg/max = %.1f/%.1f/%.1f µs\n",
       (double)min / 1000.0, (double)avg / 1000.0, (double)max / 1000.0);
   }
 
