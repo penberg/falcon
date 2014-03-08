@@ -50,7 +50,8 @@ public class ClientPerfTest {
       session.send(newOrder);
 
       for (;;) {
-        if (session.recv()) {
+        Message msg = session.recv();
+        if (msg == null) {
           break;
         }
       }

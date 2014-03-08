@@ -75,18 +75,19 @@ public class Session {
     bodyBuf.clear();
   }
 
-  public boolean recv() throws Exception {
+  public Message recv() throws Exception {
     int count = socket.read(rxBuf);
     if (count <= 0) {
-      return false;
+      return null;
     }
     rxBuf.flip();
     rxBuf.mark();
+    MessageType msgType = null;
     try {
       Protocol.match(rxBuf, BeginString);
       int bodyLen = Protocol.matchInt(rxBuf, BodyLength);
       int msgTypeOffset = rxBuf.position();
-      Protocol.match(rxBuf, MsgType);
+      msgType = Protocol.matchMsgType(rxBuf);
       rxBuf.position(msgTypeOffset + bodyLen);
       int checksumActual = sum(rxBuf) % 256;
       int checksumExpected = Protocol.matchInt(rxBuf, CheckSum);
@@ -95,13 +96,13 @@ public class Session {
       }
     } catch (PartialParseException e) {
       rxBuf.reset();
-      return false;
+      return null;
     } catch (ParseFailedException e) {
       System.out.println("GARBLED MESSAGE");
-      return false;
+      return null;
     }
     rxBuf.compact();
-    return true;
+    return new Message(msgType, Collections.<Field>emptyList());
   }
 
   private static int sum(ByteBuffer buf) {

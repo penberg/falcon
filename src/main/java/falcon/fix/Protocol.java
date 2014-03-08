@@ -1,5 +1,7 @@
 package falcon.fix;
 
+import static falcon.fix.MessageTypes.*;
+
 import java.nio.ByteBuffer;
 
 /**
@@ -100,6 +102,28 @@ public class Protocol {
       }
       result *= 10;
       result += (byte)ch - (byte)'0';
+    }
+    return result;
+  }
+
+  public static MessageType matchMsgType(ByteBuffer buf) throws ParseException {
+    matchTag(buf, Tags.MsgType);
+    MessageType result = null;
+    switch (buf.get()) {
+    case (byte)'0': result = Heartbeat;       break;
+    case (byte)'1': result = TestRequest;     break;
+    case (byte)'2': result = ResendRequest;   break;
+    case (byte)'3': result = Reject;          break;
+    case (byte)'4': result = SequenceReset;   break;
+    case (byte)'5': result = Logout;          break;
+    case (byte)'8': result = ExecutionReport; break;
+    case (byte)'A': result = Logon;           break;
+    case (byte)'D': result = NewOrderSingle;  break;
+    default:
+      throw new ParseException();
+    }
+    if (buf.get() != (byte)0x01) {
+      throw new ParseException();
     }
     return result;
   }
