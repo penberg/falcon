@@ -88,10 +88,14 @@ public class Protocol {
 
   public static int matchInt(ByteBuffer buf, Tag tag) throws ParseException {
     matchTag(buf, tag);
+    return parseInt(buf, (byte)0x01);
+  }
+
+  public static int parseInt(ByteBuffer buf, byte delimiter) {
     int result = 0;
     for (;;) {
       byte ch = buf.get();
-      if (ch == (byte)0x01) {
+      if (ch == delimiter) {
         break;
       }
       result *= 10;
