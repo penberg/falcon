@@ -119,11 +119,13 @@ public class Protocol {
     case (byte)'8': result = ExecutionReport; break;
     case (byte)'A': result = Logon;           break;
     case (byte)'D': result = NewOrderSingle;  break;
+    case (byte)0x01:
+      throw new ParseFailedException("Invalid MsgType (35)");
     default:
-      throw new ParseException();
+      throw new ParseFailedException("Tag specified without a value");
     }
     if (buf.get() != (byte)0x01) {
-      throw new ParseException();
+      throw new ParseFailedException("Invalid MsgType (35)");
     }
     return result;
   }
@@ -135,12 +137,12 @@ public class Protocol {
     }
     for (int i = 0; i < tagBytes.length; i++) {
       if (buf.get() != tagBytes[i]) {
-        throw new ParseFailedException();
+        throw new ParseFailedException("Required tag missing");
       }
     }
     byte ch = buf.get();
     if (ch != (byte)'=') {
-      throw new ParseFailedException();
+      throw new ParseFailedException("Required tag missing");
     }
   }
 }
