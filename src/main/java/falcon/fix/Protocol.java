@@ -94,6 +94,11 @@ public class Protocol {
   }
 
   public static int parseInt(ByteBuffer buf, byte delimiter) {
+    int sign = 1;
+    if (buf.get(buf.position()) == (byte)'-') {
+      buf.get();
+      sign = -1;
+    }
     int result = 0;
     for (;;) {
       byte ch = buf.get();
@@ -103,7 +108,7 @@ public class Protocol {
       result *= 10;
       result += (byte)ch - (byte)'0';
     }
-    return result;
+    return sign * result;
   }
 
   public static MessageType matchMsgType(ByteBuffer buf) throws ParseException {
