@@ -81,40 +81,16 @@ public class Protocol {
   }
 
   public static void match(ByteBuffer buf, Tag tag) throws ParseException {
-    byte[] tagBytes = tag.value();
-    if (buf.remaining() < tagBytes.length) {
-      throw new PartialParseException();
-    }
-    for (int i = 0; i < tagBytes.length; i++) {
-      if (buf.get() != tagBytes[i]) {
-        throw new ParseFailedException();
-      }
-    }
-    byte ch = buf.get();
-    if (ch != (byte)'=') {
-      throw new ParseFailedException();
-    }
+    matchTag(buf, tag);
     while (buf.get() != (byte)0x01)
       ;;
   }
 
   public static int matchInt(ByteBuffer buf, Tag tag) throws ParseException {
-    byte[] tagBytes = tag.value();
-    if (buf.remaining() < tagBytes.length) {
-      throw new PartialParseException();
-    }
-    for (int i = 0; i < tagBytes.length; i++) {
-      if (buf.get() != tagBytes[i]) {
-        throw new ParseFailedException();
-      }
-    }
-    byte ch = buf.get();
-    if (ch != (byte)'=') {
-      throw new ParseFailedException();
-    }
+    matchTag(buf, tag);
     int result = 0;
     for (;;) {
-      ch = buf.get();
+      byte ch = buf.get();
       if (ch == (byte)0x01) {
         break;
       }
@@ -122,5 +98,21 @@ public class Protocol {
       result += (byte)ch - (byte)'0';
     }
     return result;
+  }
+
+  public static void matchTag(ByteBuffer buf, Tag tag) throws ParseException {
+    byte[] tagBytes = tag.value();
+    if (buf.remaining() < tagBytes.length) {
+      throw new PartialParseException();
+    }
+    for (int i = 0; i < tagBytes.length; i++) {
+      if (buf.get() != tagBytes[i]) {
+        throw new ParseFailedException();
+      }
+    }
+    byte ch = buf.get();
+    if (ch != (byte)'=') {
+      throw new ParseFailedException();
+    }
   }
 }
