@@ -7,15 +7,15 @@ import java.nio.ByteBuffer;
  */
 public class Field {
 
-  private Tag    tag;
+  private int tag;
   private Object value;
 
-  public Field(Tag tag, Object value) {
+  public Field(int tag, Object value) {
     this.tag   = tag;
     this.value = value;
   }
 
-  public Tag tag() {
+  public int tag() {
     return tag;
   }
 

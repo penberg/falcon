@@ -22,8 +22,8 @@ public class Protocol {
   /**
    * Format field to on-wire format.
    */
-  public static void format(ByteBuffer buf, Tag tag, byte[] value) {
-    buf.put(tag.value());
+  public static void format(ByteBuffer buf, int tag, byte[] value) {
+    writeInt(buf, tag);
     buf.put((byte) '=');
     buf.put(value);
     buf.put((byte) 0x01);
@@ -32,15 +32,15 @@ public class Protocol {
   /**
    * Format field to on-wire format.
    */
-  public static void formatInt(ByteBuffer buf, Tag tag, int value) {
-    buf.put(tag.value());
+  public static void formatInt(ByteBuffer buf, int tag, int value) {
+    writeInt(buf, tag);
     buf.put((byte) '=');
     writeInt(buf, value);
     buf.put((byte) 0x01);
   }
 
-  public static void formatString(ByteBuffer buf, Tag tag, String value) {
-    buf.put(tag.value());
+  public static void formatString(ByteBuffer buf, int tag, String value) {
+    writeInt(buf, tag);
     buf.put((byte) '=');
     for (int i = 0; i < value.length(); i++) {
       buf.put((byte) value.charAt(i));
@@ -48,8 +48,8 @@ public class Protocol {
     buf.put((byte) 0x01);
   }
 
-  public static void formatCheckSum(ByteBuffer buf, Tag tag, int value) {
-    buf.put(tag.value());
+  public static void formatCheckSum(ByteBuffer buf, int tag, int value) {
+    writeInt(buf, tag);
     buf.put((byte) '=');
     if (value < 10) {
       buf.put((byte) '0');
@@ -82,13 +82,13 @@ public class Protocol {
     }
   }
 
-  public static void match(ByteBuffer buf, Tag tag) throws ParseException {
+  public static void match(ByteBuffer buf, int tag) throws ParseException {
     matchTag(buf, tag);
     while (buf.get() != (byte)0x01)
       ;;
   }
 
-  public static int matchInt(ByteBuffer buf, Tag tag) throws ParseException {
+  public static int matchInt(ByteBuffer buf, int tag) throws ParseException {
     matchTag(buf, tag);
     return parseInt(buf, (byte)0x01);
   }
@@ -148,18 +148,9 @@ public class Protocol {
     return result;
   }
 
-  public static void matchTag(ByteBuffer buf, Tag tag) throws ParseException {
-    byte[] tagBytes = tag.value();
-    if (buf.remaining() < tagBytes.length) {
-      throw new PartialParseException();
-    }
-    for (int i = 0; i < tagBytes.length; i++) {
-      if (buf.get() != tagBytes[i]) {
-        throw new ParseFailedException("Required tag missing");
-      }
-    }
-    byte ch = buf.get();
-    if (ch != (byte)'=') {
+  public static void matchTag(ByteBuffer buf, int tag) throws ParseException {
+    int actual = parseInt(buf, (byte)'=');
+    if (actual != tag) {
       throw new ParseFailedException("Required tag missing");
     }
   }

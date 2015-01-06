@@ -101,7 +101,7 @@ public class Session {
       while (rxBuf.position() < checksumOffset) {
         int tag = Protocol.parseInt(rxBuf, (byte)'=');
         ByteString value = Protocol.parseString(rxBuf, (byte)0x01);
-        fields.add(new Field(new Tag(tag), value));
+        fields.add(new Field(tag, value));
       }
       rxBuf.position(endOffset);
     } catch (PartialParseException e) {
