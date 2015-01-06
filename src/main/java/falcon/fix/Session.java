@@ -92,14 +92,13 @@ public class Session {
       int checksumActual = sum(rxBuf) % 256;
       int checksumExpected = Protocol.matchInt(rxBuf, CheckSum);
       if (checksumExpected != checksumActual) {
-        System.out.println("CHECKSUM ERROR");
+        throw new RuntimeException(String.format("Invalid checksum: expected %d, got: %d", checksumExpected, checksumActual));
       }
     } catch (PartialParseException e) {
       rxBuf.reset();
       return null;
     } catch (ParseFailedException e) {
-      System.out.println("GARBLED MESSAGE");
-      return null;
+      throw new RuntimeException("Garbled message");
     }
     rxBuf.compact();
     return new Message(msgType, Collections.<Field>emptyList());
