@@ -111,6 +111,19 @@ public class Protocol {
     return sign * result;
   }
 
+  public static ByteString parseString(ByteBuffer buf, byte delimiter) {
+    int start = buf.position();
+    for (;;) {
+      byte ch = buf.get();
+      if (ch == delimiter) {
+        break;
+      }
+    }
+    int end = buf.position() - 1;
+    buf.position(start);
+    return ByteString.of(buf, end-start);
+  }
+
   public static MessageType matchMsgType(ByteBuffer buf) throws ParseException {
     matchTag(buf, Tags.MsgType);
     MessageType result = null;

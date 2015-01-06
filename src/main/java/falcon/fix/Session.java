@@ -82,26 +82,36 @@ public class Session {
     }
     rxBuf.flip();
     rxBuf.mark();
+    List<Field> fields = new ArrayList<Field>();
     MessageType msgType = null;
     try {
       Protocol.match(rxBuf, BeginString);
       int bodyLen = Protocol.matchInt(rxBuf, BodyLength);
       int msgTypeOffset = rxBuf.position();
       msgType = Protocol.matchMsgType(rxBuf);
-      rxBuf.position(msgTypeOffset + bodyLen);
+      int checksumOffset = msgTypeOffset + bodyLen;
+      rxBuf.position(checksumOffset);
       int checksumActual = sum(rxBuf) % 256;
       int checksumExpected = Protocol.matchInt(rxBuf, CheckSum);
       if (checksumExpected != checksumActual) {
         throw new RuntimeException(String.format("Invalid checksum: expected %d, got: %d", checksumExpected, checksumActual));
       }
+      int endOffset = rxBuf.position();
+      rxBuf.position(msgTypeOffset);
+      while (rxBuf.position() < checksumOffset) {
+        int tag = Protocol.parseInt(rxBuf, (byte)'=');
+        ByteString value = Protocol.parseString(rxBuf, (byte)0x01);
+        fields.add(new Field(new Tag(tag), value));
+      }
+      rxBuf.position(endOffset);
     } catch (PartialParseException e) {
       rxBuf.reset();
       return null;
     } catch (ParseFailedException e) {
-      throw new RuntimeException("Garbled message");
+      throw new RuntimeException("Garbled message", e);
     }
     rxBuf.compact();
-    return new Message(msgType, Collections.<Field>emptyList());
+    return new Message(msgType, fields);
   }
 
   private static int sum(ByteBuffer buf) {
