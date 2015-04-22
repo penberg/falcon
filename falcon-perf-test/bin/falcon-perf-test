@@ -10,6 +10,6 @@ fi
 
 java_class=falcon.fix.perf.ClientPerfTest
 
-JAVA_OPTS="-verbose:gc -cp target/falcon-0.1.0-master-SNAPSHOT-jar-with-dependencies.jar"
+JAVA_OPTS="-verbose:gc -cp falcon-perf-test/target/falcon-perf-test-0.1.0-master-SNAPSHOT-jar-with-dependencies.jar"
 
 $JAVACMD $JAVA_OPTS $java_class $@

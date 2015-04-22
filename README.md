@@ -100,7 +100,7 @@ $ taskset -c 0 tools/fix/fix_server -m 1 -p 7070
 and running Falcon latency tests against it:
 
 ```
-$ time ./bin/falcon-perf-test 1000000
+$ time ./falcon-perf-test/bin/falcon-perf-test 1000000
 22.812477 seconds
 43835.7 messages/second
 ḿin/avg/max = 20.4/22.8/997.5 µs

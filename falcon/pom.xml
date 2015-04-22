@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>falcon</groupId>
+    <artifactId>falcon-parent</artifactId>
+    <version>0.1.0-master-SNAPSHOT</version>
+  </parent>
+
+  <groupId>falcon</groupId>
+  <artifactId>falcon</artifactId>
+  <name>Falcon</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.github.stephenc</groupId>
+      <artifactId>jamm</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.github.stephenc</groupId>
+                  <artifactId>jamm</artifactId>
+                  <type>jar</type>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                  <destFileName>jamm.jar</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-javaagent:${project.build.directory}/jamm.jar</argLine>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
