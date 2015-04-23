@@ -10,11 +10,8 @@ is packed with other optimizations such as avoiding querying the system clock
 for every message and open-coding formatting and parsing functions where the
 JRE allocates memory implicitly.
 
-Falcon is able to achieve 23 µs RTT on average when running a latency tester
-client and server on the same x86-64 machine with two cores. This means in
-practice that the FIX engine overhead is around 10 µs per message sent or
-received on top of network latency, with allocation rates as small as 1
-KB/second per session.
+Falcon is able to achieve 8 µs RTT on when running the latency tester client
+and server on the same machine.
 
 ## Features
 
@@ -85,29 +82,39 @@ public class Example {
 
 ## Performance
 
-FIX engine is measured to have 23 µs round-trip time for a FIX client sending a
-``NewOrderSingle`` message and waiting for ``ExecutionReport`` on x86-64 Linux
-with both client and server running on the same machine.  The numbers include
-Linux TCP/IP loopback overhead which is 5 µs of the RTT.
+The FIX engine has been measured to have 8 µs RTT for a loopback ping-pong test
+where client sends a ``NewOrderSingle`` message and waits for an
+``ExecutionReport`` message to arrive. The numbers include the time spent in
+Linux TCP/IP stack and the loopback device.
 
-The numbers can be reproduced by starting a FIX latency test server available
-in ``libtrading``:
+To reproduce the results, first download and build [Libtrading]. Then start the
+FIX performance test server:
 
 ```
 $ taskset -c 0 tools/fix/fix_server -m 1 -p 7070
 ```
 
-and running Falcon latency tests against it:
+Finally, run the Falcon latency tests:
 
 ```
-$ time ./falcon-perf-test/bin/falcon-perf-test 1000000
-22.812477 seconds
-43835.7 messages/second
-ḿin/avg/max = 20.4/22.8/997.5 µs
+$ ./falcon-perf-test/bin/falcon-perf-test 1000000
+8.048345 seconds
+124249.1 messages/second
+min/avg/max = 5.2/8.0/8679.9 µs
+Percentiles:
+  1.00%: 7.54 µs
+  5.00%: 7.64 µs
+ 10.00%: 7.69 µs
+ 50.00%: 7.88 µs
+ 90.00%: 8.17 µs
+ 95.00%: 8.36 µs
+ 99.00%: 9.89 µs
 ```
+
+  [Libtrading]: https://github.com/libtrading/libtrading
 
 ## License
 
-Copyright © 2013 Pekka Enberg
+Copyright © 2013-2015 Pekka Enberg and contributors
 
 Falcon is distributed under the 2-clause BSD license.
