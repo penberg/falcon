@@ -3,6 +3,7 @@ package falcon.fix.perf;
 import static java.net.StandardSocketOptions.TCP_NODELAY;
 import static falcon.fix.MessageTypes.*;
 import static falcon.fix.Versions.*;
+import org.HdrHistogram.Histogram;
 import static falcon.fix.Tags.*;
 import java.nio.channels.*;
 import java.net.*;
@@ -40,6 +41,8 @@ public class ClientPerfTest {
     long min = Long.MAX_VALUE;
     long max = 0;
 
+    Histogram histogram = new Histogram(3);
+
     for (int i = 0; i < iterations; i++) {
       long iterationStart = System.nanoTime();
 
@@ -62,6 +65,7 @@ public class ClientPerfTest {
 
       duration += iterationTime;
 
+      histogram.recordValue(iterationTime);
       min = Math.min(min, iterationTime);
       max = Math.max(max, iterationTime);
     }
@@ -80,6 +84,14 @@ public class ClientPerfTest {
     System.out.printf("%.1f messages/second\n", (double)iterations/seconds);
     System.out.printf("min/avg/max = %.1f/%.1f/%.1f µs\n",
       (double)min / 1000.0, (double)avg / 1000.0, (double)max / 1000.0);
+    System.out.printf("Percentiles:\n");
+    System.out.printf("  1.00%%: %.2f µs\n", nanosToMicros(histogram.getValueAtPercentile(  1.00)));
+    System.out.printf("  5.00%%: %.2f µs\n", nanosToMicros(histogram.getValueAtPercentile(  5.00)));
+    System.out.printf(" 10.00%%: %.2f µs\n", nanosToMicros(histogram.getValueAtPercentile( 10.00)));
+    System.out.printf(" 50.00%%: %.2f µs\n", nanosToMicros(histogram.getValueAtPercentile( 50.00)));
+    System.out.printf(" 90.00%%: %.2f µs\n", nanosToMicros(histogram.getValueAtPercentile( 90.00)));
+    System.out.printf(" 95.00%%: %.2f µs\n", nanosToMicros(histogram.getValueAtPercentile( 95.00)));
+    System.out.printf(" 99.00%%: %.2f µs\n", nanosToMicros(histogram.getValueAtPercentile( 99.00)));
   }
 
   private static SocketChannel connect(String host, int port) throws Exception {
@@ -90,5 +102,9 @@ public class ClientPerfTest {
     socket.connect(addr);
     socket.finishConnect();
     return socket;
+  }
+
+  private static double nanosToMicros(double nano) {
+    return nano / 1000.0;
   }
 }

@@ -18,6 +18,11 @@
       <artifactId>falcon</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.hdrhistogram</groupId>
+      <artifactId>HdrHistogram</artifactId>
+      <version>2.1.4</version>
+    </dependency>
   </dependencies>
 
   <build>
