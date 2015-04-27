@@ -54,7 +54,7 @@ public class ClientPerfTest {
 
       for (;;) {
         Message msg = session.recv();
-        if (msg == null) {
+        if (msg != null) {
           break;
         }
       }
