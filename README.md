@@ -98,17 +98,16 @@ Finally, run the Falcon latency tests:
 
 ```
 $ ./falcon-perf-test/bin/falcon-perf-test 1000000
-8.048345 seconds
-124249.1 messages/second
-min/avg/max = 5.2/8.0/8679.9 µs
+87693.5 messages/second
+min/avg/max = 9.8/11.4/19935.3 µs
 Percentiles:
-  1.00%: 7.54 µs
-  5.00%: 7.64 µs
- 10.00%: 7.69 µs
- 50.00%: 7.88 µs
- 90.00%: 8.17 µs
- 95.00%: 8.36 µs
- 99.00%: 9.89 µs
+  1.00%: 10.15 µs
+  5.00%: 10.51 µs
+ 10.00%: 10.61 µs
+ 50.00%: 11.12 µs
+ 90.00%: 11.90 µs
+ 95.00%: 13.27 µs
+ 99.00%: 14.53 µs
 ```
 
   [Libtrading]: https://github.com/libtrading/libtrading
