@@ -100,7 +100,7 @@ public class ClientPerfTest {
     socket.configureBlocking(false);
     socket.setOption(TCP_NODELAY, true);
     socket.connect(addr);
-    socket.finishConnect();
+    while (!socket.finishConnect());
     return socket;
   }
 
